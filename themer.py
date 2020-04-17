@@ -1,6 +1,8 @@
 import os
 import subprocess
 import shutil
+import winreg
+import ctypes
 from pathlib import Path
 from datetime import datetime
 
@@ -13,11 +15,10 @@ class Widget:
         self.absolute = name.split("\\")[0]
         self.main = docs + '\\' + self.absolute + r"\@Resources\Variables.inc"
     
-    def switch(self):
-        time = datetime.now().timetuple()
-        if time.tm_hour >= 17 or time.tm_hour < 5:
+    def switch(self, mode):
+        if mode == 0:
             file = f"{current_dir}\\{self.absolute}\\dark.inc"
-        else:
+        elif mode == 1:
             file = f"{current_dir}\\{self.absolute}\\light.inc"
 
         os.remove(self.main)
@@ -26,9 +27,40 @@ class Widget:
         command = path + f'"{self.name}"'
         subprocess.call(command)
 
+class Registry:
+    def __init__(self, name):
+        self.root = winreg.HKEY_CURRENT_USER
+        self.path = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+        self.key_name = name
 
-lyrics_widget = Widget("Simple Lyrics Display")
-lyrics_widget.switch()
+    def query(self):
+        opened_key = winreg.OpenKeyEx(self.root, self.path, access=winreg.KEY_READ)
+        values = winreg.QueryValueEx(opened_key, self.key_name)
+        winreg.CloseKey(opened_key)
+        return values
+    
+    def set(self, value):
+        opened_key = winreg.OpenKeyEx(self.root, self.path, access=winreg.KEY_WRITE)
+        winreg.SetValueEx(opened_key, self.key_name, 0, winreg.REG_DWORD, value)
+        winreg.CloseKey(opened_key)
 
-info_widget = Widget("Lumiero\\Song Info")
-info_widget.switch()
+
+time = datetime.now().timetuple()
+if time.tm_hour >= 17 or time.tm_hour < 5:
+    theme_mode = 0
+    wallpaper = f"{current_dir}\\wallpapers\\dark.png"
+else:
+    theme_mode = 1
+    wallpaper = f"{current_dir}\\wallpapers\\light.png"
+
+widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
+for widget in widgets:
+    working_widget = Widget(widget)
+    working_widget.switch(theme_mode)
+
+registry_keys = ["AppsUseLightTheme", "SystemUsesLightTheme"]
+for registry_key in registry_keys:
+    working_key = Registry(registry_key)
+    working_key.set(theme_mode)
+
+ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
