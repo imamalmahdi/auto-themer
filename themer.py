@@ -64,3 +64,16 @@ for registry_key in registry_keys:
     working_key.set(theme_mode)
 
 ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
+
+terminal_file = r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json"
+if theme_mode == 0:
+    new_file = f"{current_dir}\\Terminal\\dark.json"
+elif theme_mode == 1:
+    new_file = f"{current_dir}\\Terminal\\light.json"
+os.remove(terminal_file)
+shutil.copy(new_file, terminal_file)
+
+if theme_mode == 0:
+    subprocess.call("spicetify restore", stdout=subprocess.DEVNULL)
+elif theme_mode == 1:
+    subprocess.call("spicetify apply", stdout=subprocess.DEVNULL)
