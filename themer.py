@@ -3,10 +3,24 @@ import subprocess
 import shutil
 import winreg
 import ctypes
+import fileinput
 from pathlib import Path
 from datetime import datetime
 
 current_dir = Path(__file__).parent.absolute()
+
+class SettingsFile:
+    def __init__(self, path):
+        self.file_path = path
+    
+    def change(self, target_line, new_line):
+        with fileinput.FileInput(self.file_path, inplace=True, backup='.bak') as file:
+            for line in file:
+                if target_line in line:
+                    print(line.replace(line, new_line), end='')
+                else:
+                    print(line, end='')
+
 
 class Widget:
     def __init__(self, name):
@@ -52,6 +66,8 @@ if time.tm_hour >= 17 or time.tm_hour < 5:
 else:
     theme_mode = 1
     wallpaper = f"{current_dir}\\wallpapers\\light.png"
+# theme_mode = 1
+# wallpaper = f"{current_dir}\\wallpapers\\light.png"
 
 # Rainmeter
 widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
@@ -69,16 +85,23 @@ for registry_key in registry_keys:
 ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
 
 # Windows Terminal
-terminal_file = r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json"
-if theme_mode == 0:
-    new_file = f"{current_dir}\\Terminal\\dark.json"
-elif theme_mode == 1:
-    new_file = f"{current_dir}\\Terminal\\light.json"
-os.remove(terminal_file)
-shutil.copy(new_file, terminal_file)
+terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json")
+if theme_mode == 1:
+    replaced_value = "\t"*3 + '"colorScheme": "Night Owlish Light",\n'
+elif theme_mode == 0:
+    replaced_value = "\t"*3 + '"colorScheme": "Dark+",\n'
+terminal_file.change("colorScheme", replaced_value)
+
+# Vscode
+vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.json")
+if theme_mode == 1:
+    replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl Light",\n'
+elif theme_mode == 0:
+    replaced_value = "\t"*3 + '"workbench.colorTheme": "Community Material Theme Darker High Contrast",\n'
+vscode_file.change("workbench.colorTheme", replaced_value)
 
 # Spotify
 if theme_mode == 0:
-    subprocess.call("spicetify restore", stdout=subprocess.DEVNULL)
+    subprocess.call("spicetify -q restore")
 elif theme_mode == 1:
-    subprocess.call("spicetify apply", stdout=subprocess.DEVNULL)
+    subprocess.call("spicetify -q apply")
