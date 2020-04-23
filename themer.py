@@ -44,7 +44,7 @@ class Registry:
         winreg.SetValueEx(opened_key, self.key_name, 0, winreg.REG_DWORD, value)
         winreg.CloseKey(opened_key)
 
-
+# Choosing theme
 time = datetime.now().timetuple()
 if time.tm_hour >= 17 or time.tm_hour < 5:
     theme_mode = 0
@@ -53,18 +53,22 @@ else:
     theme_mode = 1
     wallpaper = f"{current_dir}\\wallpapers\\light.png"
 
+# Rainmeter
 widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
 for widget in widgets:
     working_widget = Widget(widget)
     working_widget.switch(theme_mode)
 
+# Windows Theme
 registry_keys = ["AppsUseLightTheme", "SystemUsesLightTheme"]
 for registry_key in registry_keys:
     working_key = Registry(registry_key)
     working_key.set(theme_mode)
 
+# Wallpaper
 ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
 
+# Windows Terminal
 terminal_file = r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json"
 if theme_mode == 0:
     new_file = f"{current_dir}\\Terminal\\dark.json"
@@ -73,6 +77,7 @@ elif theme_mode == 1:
 os.remove(terminal_file)
 shutil.copy(new_file, terminal_file)
 
+# Spotify
 if theme_mode == 0:
     subprocess.call("spicetify restore", stdout=subprocess.DEVNULL)
 elif theme_mode == 1:
