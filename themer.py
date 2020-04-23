@@ -101,7 +101,7 @@ elif theme_mode == 0:
 vscode_file.change("workbench.colorTheme", replaced_value)
 
 # Spotify
-if theme_mode == 0:
-    subprocess.call("spicetify -q restore")
-elif theme_mode == 1:
-    subprocess.call("spicetify -q apply")
+# if theme_mode == 0:
+#     subprocess.call("spicetify -q restore")
+# elif theme_mode == 1:
+#     subprocess.call("spicetify -q apply")
