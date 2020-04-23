@@ -97,7 +97,7 @@ vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.j
 if theme_mode == 1:
     replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl Light",\n'
 elif theme_mode == 0:
-    replaced_value = "\t"*3 + '"workbench.colorTheme": "Community Material Theme Darker High Contrast",\n'
+    replaced_value = "\t"*1 + '"workbench.colorTheme": "Community Material Theme Darker High Contrast",\n'
 vscode_file.change("workbench.colorTheme", replaced_value)
 
 # Spotify
