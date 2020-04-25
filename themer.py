@@ -85,7 +85,7 @@ for registry_key in registry_keys:
 ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
 
 # Windows Terminal
-terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json")
+terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json")
 if theme_mode == 1:
     replaced_value = "\t"*3 + '"colorScheme": "Night Owlish Light",\n'
 elif theme_mode == 0:
