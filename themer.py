@@ -97,11 +97,14 @@ vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.j
 if theme_mode == 1:
     replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl Light",\n'
 elif theme_mode == 0:
-    replaced_value = "\t"*1 + '"workbench.colorTheme": "Community Material Theme Darker High Contrast",\n'
+    replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl",\n'
 vscode_file.change("workbench.colorTheme", replaced_value)
 
 # Spotify
-# if theme_mode == 0:
-#     subprocess.call("spicetify -q restore")
-# elif theme_mode == 1:
-#     subprocess.call("spicetify -q apply")
+if theme_mode == 0:
+    spotify_theme = "Black"
+elif theme_mode == 1:
+    spotify_theme = "Midnight-Light"
+
+subprocess.call(f"spicetify -q config current_theme {spotify_theme}")
+subprocess.call("spicetify -q update")
