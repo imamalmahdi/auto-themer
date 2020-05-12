@@ -106,5 +106,5 @@ if theme_mode == 0:
 elif theme_mode == 1:
     spotify_theme = "Midnight-Light"
 
-subprocess.call(f"spicetify -q config current_theme {spotify_theme}")
-subprocess.call("spicetify -q update")
+subprocess.call(f"spicetify -q config current_theme {spotify_theme}", shell=True)
+subprocess.call("spicetify -q update", shell=True)
