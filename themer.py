@@ -4,6 +4,7 @@ import shutil
 import winreg
 import ctypes
 import fileinput
+import json
 from pathlib import Path
 from datetime import datetime
 
@@ -58,6 +59,22 @@ class Registry:
         winreg.SetValueEx(opened_key, self.key_name, 0, winreg.REG_DWORD, value)
         winreg.CloseKey(opened_key)
 
+# Loads a setting fild
+settings_file = Path(f"{str(current_dir)}\\settings.json")
+if settings_file.exists() == False:
+    settings = {
+        "rainmeter" : True,
+        "windows" : True,
+        "wallpaper" : True,
+        "terminal" : True,
+        "vscode" : True,
+        "spotify" : True
+    }
+
+    settings_file.write_text(json.dumps(settings, indent=4))
+else:
+    settings = json.loads(settings_file.read_text())
+
 # Choosing theme
 time = datetime.now().timetuple()
 if time.tm_hour >= 17 or time.tm_hour < 5:
@@ -70,41 +87,47 @@ else:
 # wallpaper = f"{current_dir}\\wallpapers\\light.png"
 
 # Rainmeter
-widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
-for widget in widgets:
-    working_widget = Widget(widget)
-    working_widget.switch(theme_mode)
+if settings['rainmeter']:
+    widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
+    for widget in widgets:
+        working_widget = Widget(widget)
+        working_widget.switch(theme_mode)
 
 # Windows Theme
-registry_keys = ["AppsUseLightTheme", "SystemUsesLightTheme"]
-for registry_key in registry_keys:
-    working_key = Registry(registry_key)
-    working_key.set(theme_mode)
+if settings['windows']:
+    registry_keys = ["AppsUseLightTheme", "SystemUsesLightTheme"]
+    for registry_key in registry_keys:
+        working_key = Registry(registry_key)
+        working_key.set(theme_mode)
 
 # Wallpaper
-ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
+if settings['wallpaper']:
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
 
 # Windows Terminal
-terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json")
-if theme_mode == 1:
-    replaced_value = "\t"*3 + '"colorScheme": "Night Owlish Light",\n'
-elif theme_mode == 0:
-    replaced_value = "\t"*3 + '"colorScheme": "Dark+",\n'
-terminal_file.change("colorScheme", replaced_value)
+if settings['terminal'][0]:
+    terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json")
+    if theme_mode == 1:
+        replaced_value = "\t"*3 + '"colorScheme": "' + settings['terminal'][1]['light'] + '",\n'
+    elif theme_mode == 0:
+        replaced_value = "\t"*3 + '"colorScheme": "' + settings['terminal'][1]['dark'] + '",\n'
+    terminal_file.change("colorScheme", replaced_value)
 
 # Vscode
-vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.json")
-if theme_mode == 1:
-    replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl Light",\n'
-elif theme_mode == 0:
-    replaced_value = "\t"*1 + '"workbench.colorTheme": "Night Owl",\n'
-vscode_file.change("workbench.colorTheme", replaced_value)
+if settings['vscode'][0]:
+    vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.json")
+    if theme_mode == 1:
+        replaced_value = "\t"*1 + '"workbench.colorTheme": "' + settings['vscode'][1]['light'] + '",\n'
+    elif theme_mode == 0:
+        replaced_value = "\t"*1 + '"workbench.colorTheme": "' + settings['vscode'][1]['dark'] + '",\n'
+    vscode_file.change("workbench.colorTheme", replaced_value)
 
 # Spotify
-if theme_mode == 0:
-    spotify_theme = "Black"
-elif theme_mode == 1:
-    spotify_theme = "Midnight-Light"
+if settings['spotify'][0]:
+    if theme_mode == 0:
+        spotify_theme = settings['spotify'][1]['dark']
+    elif theme_mode == 1:
+        spotify_theme = settings['spotify'][1]['light']
 
-subprocess.call(f"spicetify -q config current_theme {spotify_theme}", shell=True)
-subprocess.call("spicetify -q update", shell=True)
+    subprocess.call(f"spicetify -q config current_theme {spotify_theme}", shell=True)
+    subprocess.call("spicetify -q update", shell=True)
