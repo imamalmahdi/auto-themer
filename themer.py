@@ -87,8 +87,8 @@ else:
 # wallpaper = f"{current_dir}\\wallpapers\\light.png"
 
 # Rainmeter
-if settings['rainmeter']:
-    widgets = ["Simple Lyrics Display", "Lumiero\\Song Info"]
+if settings['rainmeter'][0]:
+    widgets = settings['rainmeter'][1]
     for widget in widgets:
         working_widget = Widget(widget)
         working_widget.switch(theme_mode)
