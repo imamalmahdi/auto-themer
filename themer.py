@@ -79,12 +79,9 @@ else:
 time = datetime.now().timetuple()
 if time.tm_hour >= 17 or time.tm_hour < 5:
     theme_mode = 0
-    wallpaper = f"{current_dir}\\wallpapers\\dark.png"
 else:
     theme_mode = 1
-    wallpaper = f"{current_dir}\\wallpapers\\light.png"
 # theme_mode = 1
-# wallpaper = f"{current_dir}\\wallpapers\\light.png"
 
 # Rainmeter
 if settings['rainmeter'][0]:
@@ -101,7 +98,11 @@ if settings['windows']:
         working_key.set(theme_mode)
 
 # Wallpaper
-if settings['wallpaper']:
+if settings['wallpaper'][0]:
+    if theme_mode == 1:
+        wallpaper = settings['wallpaper'][1]["light"]
+    elif theme_mode == 0:
+        wallpaper = settings['wallpaper'][1]["dark"]
     ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper, 3)
 
 # Windows Terminal
