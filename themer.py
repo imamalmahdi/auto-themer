@@ -77,7 +77,7 @@ else:
 
 # Choosing theme
 time = datetime.now().timetuple()
-if time.tm_hour >= 17 or time.tm_hour < 5:
+if time.tm_hour >= settings['time']['dark'] or time.tm_hour < settings['time']['light']:
     theme_mode = 0
 else:
     theme_mode = 1
