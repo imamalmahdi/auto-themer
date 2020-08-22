@@ -63,12 +63,53 @@ class Registry:
 settings_file = Path(f"{str(current_dir)}\\settings.json")
 if settings_file.exists() == False:
     settings = {
-        "rainmeter" : True,
-        "windows" : True,
-        "wallpaper" : True,
-        "terminal" : True,
-        "vscode" : True,
-        "spotify" : True
+        "time" : {
+            "light": 5,
+            "dark": 17
+        },
+        "rainmeter": [
+            False, 
+            [
+                ""
+            ]
+        ],
+        "windows": False,
+        "wallpaper": [
+            False, {
+                "light": "",
+                "dark": ""
+            }
+        ],
+        "terminal": [
+            False, {
+                "light": "",
+                "dark": ""
+            }
+        ],
+        "vscode": [
+            False, {
+                "light": "",
+                "dark": ""
+            }
+        ],
+        "spotify": [
+            False, {
+                "light": "",
+                "dark": ""
+            }
+        ],
+        "sumatrapdf": [
+            False, {
+                "light": {
+                    "text": "",
+                    "background": ""
+                },
+                "dark": {
+                    "text": "",
+                    "background": ""
+                }
+            }
+        ]
     }
 
     settings_file.write_text(json.dumps(settings, indent=4))
