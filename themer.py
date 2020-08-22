@@ -3,8 +3,8 @@ import subprocess
 import shutil
 import winreg
 import ctypes
-import fileinput
 import json
+import in_place
 from pathlib import Path
 from datetime import datetime
 
@@ -15,12 +15,12 @@ class SettingsFile:
         self.file_path = path
     
     def change(self, target_line, new_line):
-        with fileinput.FileInput(self.file_path, inplace=True, backup='.bak') as file:
-            for line in file:
+        with in_place.InPlace(self.file_path, backup_ext=".bak", encoding="utf-8") as config_file:
+            for line in config_file:
                 if target_line in line:
-                    print(line.replace(line, new_line), end='')
+                    config_file.write(line.replace(line, new_line))
                 else:
-                    print(line, end='')
+                    config_file.write(line)
 
 
 class Widget:
@@ -132,3 +132,15 @@ if settings['spotify'][0]:
 
     subprocess.call(f"spicetify -q config current_theme {spotify_theme}", shell=True)
     subprocess.call("spicetify -q update", shell=True)
+
+# SumatraPDF
+if settings['sumatrapdf'][0]:
+    sumatrapdf_settings = SettingsFile(r"C:\Users\mahdi\AppData\Local\SumatraPDF\SumatraPDF-settings.txt")
+    if theme_mode == 1:
+        text_replace = "\t"*1 + 'TextColor = ' + settings['sumatrapdf'][1]['light']["text"] + '\n'
+        bak_replace = "\t"*1 + 'BackgroundColor = ' + settings['sumatrapdf'][1]['light']["background"] + '\n'
+    elif theme_mode == 0:
+        text_replace = "\t"*1 + 'TextColor = ' + settings['sumatrapdf'][1]['dark']["text"] + '\n'
+        bak_replace = "\t"*1 + 'BackgroundColor = ' + settings['sumatrapdf'][1]['dark']["background"] + '\n'
+    sumatrapdf_settings.change("TextColor", text_replace)
+    sumatrapdf_settings.change("BackgroundColor", bak_replace)
