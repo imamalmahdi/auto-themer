@@ -1,6 +1,5 @@
 import ctypes
 import subprocess
-from pathlib import Path
 from datetime import datetime
 from config import get_config
 from app_settings import SettingsFile
