@@ -3,10 +3,10 @@ import subprocess
 import shutil
 import winreg
 import ctypes
-import json
 import in_place
 from pathlib import Path
 from datetime import datetime
+from config import get_config
 
 current_dir = Path(__file__).parent.absolute()
 
@@ -60,61 +60,7 @@ class Registry:
         winreg.CloseKey(opened_key)
 
 # Loads a setting fild
-settings_file = Path(f"{str(current_dir)}\\settings.json")
-if settings_file.exists() == False:
-    settings = {
-        "time" : {
-            "light": 5,
-            "dark": 17
-        },
-        "rainmeter": [
-            False, 
-            [
-                ""
-            ]
-        ],
-        "windows": False,
-        "wallpaper": [
-            False, {
-                "light": "",
-                "dark": ""
-            }
-        ],
-        "terminal": [
-            False, {
-                "light": "",
-                "dark": ""
-            }
-        ],
-        "vscode": [
-            False, {
-                "light": "",
-                "dark": ""
-            }
-        ],
-        "spotify": [
-            False, {
-                "light": "",
-                "dark": ""
-            }
-        ],
-        "sumatrapdf": [
-            False, {
-                "light": {
-                    "text": "",
-                    "background": ""
-                },
-                "dark": {
-                    "text": "",
-                    "background": ""
-                }
-            }
-        ]
-    }
-
-    settings_file.write_text(json.dumps(settings, indent=4))
-else:
-    settings = json.loads(settings_file.read_text())
+settings = get_config()
 
 # Choosing theme
 time = datetime.now().timetuple()
