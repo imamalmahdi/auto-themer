@@ -3,25 +3,12 @@ import subprocess
 import shutil
 import winreg
 import ctypes
-import in_place
 from pathlib import Path
 from datetime import datetime
 from config import get_config
+from app_settings import SettingsFile
 
 current_dir = Path(__file__).parent.absolute()
-
-class SettingsFile:
-    def __init__(self, path):
-        self.file_path = path
-    
-    def change(self, target_line, new_line):
-        with in_place.InPlace(self.file_path, backup_ext=".bak", encoding="utf-8") as config_file:
-            for line in config_file:
-                if target_line in line:
-                    config_file.write(line.replace(line, new_line))
-                else:
-                    config_file.write(line)
-
 
 class Widget:
     def __init__(self, name):
