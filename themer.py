@@ -1,12 +1,12 @@
 import ctypes
 import subprocess
 from datetime import datetime
-from config import get_config
+from config import get_config, USERNAME
 from app_settings import SettingsFile
 from widgets import Widget
 from registry import Registry
 
-# Loads a setting fild
+# Loads a setting file
 settings = get_config()
 
 # Choosing theme
@@ -41,7 +41,9 @@ if settings['wallpaper'][0]:
 
 # Windows Terminal
 if settings['terminal'][0]:
-    terminal_file = SettingsFile(r"C:\Users\mahdi\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json")
+    terminal_file = SettingsFile(
+        f"C:\\Users\\{USERNAME}\\AppData\\Local\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\settings.json"
+    )
     if theme_mode == 1:
         replaced_value = "\t"*3 + '"colorScheme": "' + settings['terminal'][1]['light'] + '",\n'
     elif theme_mode == 0:
@@ -50,7 +52,9 @@ if settings['terminal'][0]:
 
 # Vscode
 if settings['vscode'][0]:
-    vscode_file = SettingsFile(r"C:\Users\mahdi\AppData\Roaming\Code\User\settings.json")
+    vscode_file = SettingsFile(
+        f"C:\\Users\\{USERNAME}\\AppData\\Roaming\\Code\\User\\settings.json"
+    )
     if theme_mode == 1:
         replaced_value = "\t"*1 + '"workbench.colorTheme": "' + settings['vscode'][1]['light'] + '",\n'
     elif theme_mode == 0:
@@ -69,7 +73,9 @@ if settings['spotify'][0]:
 
 # SumatraPDF
 if settings['sumatrapdf'][0]:
-    sumatrapdf_settings = SettingsFile(r"C:\Users\mahdi\AppData\Local\SumatraPDF\SumatraPDF-settings.txt")
+    sumatrapdf_settings = SettingsFile(
+        f"C:\\Users\\{USERNAME}\\AppData\\Local\\SumatraPDF\\SumatraPDF-settings.txt"
+    )
     if theme_mode == 1:
         text_replace = "\t"*1 + 'TextColor = ' + settings['sumatrapdf'][1]['light']["text"] + '\n'
         bak_replace = "\t"*1 + 'BackgroundColor = ' + settings['sumatrapdf'][1]['light']["background"] + '\n'

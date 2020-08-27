@@ -1,7 +1,9 @@
 from pathlib import Path
 import json
+import os
 
 CURRENT_DIR = Path(__file__).parent.absolute()
+USERNAME = os.getenv("username")
 
 def get_config():
     settings_file = Path(f"{str(CURRENT_DIR)}\\settings.json")

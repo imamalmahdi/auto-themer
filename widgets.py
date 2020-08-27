@@ -1,11 +1,11 @@
 import os
 import subprocess
 import shutil
-from config import CURRENT_DIR
+from config import CURRENT_DIR, USERNAME
 
 class Widget:
     def __init__(self, name):
-        docs = r"C:\Users\mahdi\OneDrive\Documents\Rainmeter\Skins"
+        docs = f"C:\\Users\\{USERNAME}\\OneDrive\\Documents\\Rainmeter\\Skins"
         self.name = name
         self.absolute = name.split("\\")[0]
         self.main = docs + '\\' + self.absolute + r"\@Resources\Variables.inc"
